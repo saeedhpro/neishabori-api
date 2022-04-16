@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Constants;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -56,5 +57,12 @@ class Controller extends BaseController
     public function getLimit(): int
     {
         return request()->has('limit') ? request()->get('limit') : 10;
+    }
+
+    public function getAuth(): User
+    {
+        /** @var User $auth */
+        $user = auth()->user();
+        return $user;
     }
 }
