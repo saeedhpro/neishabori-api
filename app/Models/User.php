@@ -28,6 +28,7 @@ class User extends Authenticatable
         'avatar',
         'is_legal',
         'birth_date',
+        'phone_number_verified_at',
     ];
 
     /**
@@ -47,6 +48,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_number_verified_at' => 'datetime',
+        'is_legal' => 'bool',
     ];
 
     public function organization()

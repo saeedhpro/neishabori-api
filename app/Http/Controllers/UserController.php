@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Constants\Constants;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\VerifyRegisterRequest;
 use App\Http\Resources\UserCollectionResource;
 use App\Http\Resources\UserLoginResource;
 use App\Http\Resources\UserResource;
+use App\Interfaces\OrganizationInterface;
+use App\Interfaces\OtpInterface;
 use App\Interfaces\UserInterface;
+use App\Models\Otp;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,10 +22,18 @@ class UserController extends Controller
 {
 
     protected UserInterface $userRepository;
+    protected OrganizationInterface $organizationRepository;
+    protected OtpInterface $otpRepository;
 
-    public function __construct(UserInterface $userRepository)
+    public function __construct(
+        UserInterface $userRepository,
+        OrganizationInterface $organizationRepository,
+        OtpInterface $otpRepository
+    )
     {
         $this->userRepository = $userRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->otpRepository = $otpRepository;
     }
 
     public function login(UserLoginRequest $request)
@@ -28,12 +41,8 @@ class UserController extends Controller
         /** @var User $user */
         $user = $this->userRepository->findOneByPhoneNumberOrFail($request->get('phone_number'));
         if (Hash::check($request->password, $user->password)) {
-            if ($user->is_admin) {
-                $token = $user->createToken('achilan')->accessToken;
-                return new UserLoginResource($user, $token);
-            } else {
-                return $this->accessDeniedError();
-            }
+            $token = $user->createToken('shop')->accessToken;
+            return new UserLoginResource($user, $token);
         } else {
             return $this->createError('password', Constants::INVALID_PASSWORD_ERROR, 422);
         }
@@ -42,13 +51,29 @@ class UserController extends Controller
     public function register(UserRegisterRequest $request)
     {
         $request['password'] = bcrypt($request->get('password'));
-        /** @var User $user */
-        $user = $this->userRepository->create($request->only([
+        $this->userRepository->firstOrCreate($request->get('phone_number'), $request->only([
             'phone_number',
             'full_name',
             'password',
         ]));
-        return $this->createCustomResponse($user);
+        $code = $this->otpRepository->generate($request->get('phone_number'));
+        return $this->createCustomResponse($code);
+    }
+
+    public function verifyRegister(VerifyRegisterRequest $request)
+    {
+        /** @var User $user */
+        $user = $this->userRepository->findOneByPhoneNumberOrFail($request->get('phone_number'));
+        /** @var Otp $otp */
+        $otp = $this->otpRepository->findByPhoneNumberOrFail($request->get('phone_number'));
+        if ($otp->code == $request->get('code')) {
+            $user->update([
+                'phone_number_verified_at' => Carbon::now(),
+            ]);
+            return $this->createCustomResponse($user);
+        } else {
+            return $this->createError('code', Constants::INVALID_OTP_CODE_ERROR, 422);
+        }
     }
 
     public function me()
@@ -75,7 +100,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return UserResource
      */
     public function show(int $id)
@@ -86,8 +111,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -98,7 +123,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
