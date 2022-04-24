@@ -25,6 +25,7 @@ class ArticleUpdateRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
+            'summary' => 'nullable|string',
             'thumbnail' => 'nullable|string',
             'body' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',

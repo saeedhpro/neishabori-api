@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Jcc\LaravelVote\Traits\Votable;
 
 class Comment extends Model
@@ -14,9 +15,26 @@ class Comment extends Model
     const TYPE_PRODUCT = 'product';
 
     protected $fillable = [
-        'full_name',
         'type',
-        'email',
         'body',
+        'user_id',
+        'commentable_id',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function commentable(): BelongsTo
+    {
+        if ($this->type == Comment::TYPE_ARTICLE) {
+            return $this->article();
+        }
+    }
+
+    public function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class, 'id', 'commentable_id');
+    }
 }

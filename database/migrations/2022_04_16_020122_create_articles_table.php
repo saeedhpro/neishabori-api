@@ -17,6 +17,7 @@ class CreateArticlesTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->nullable();
+            $table->text('summary')->nullable();
             $table->text('thumbnail')->nullable();
             $table->text('body')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();

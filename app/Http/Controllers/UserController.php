@@ -76,7 +76,7 @@ class UserController extends Controller
         }
     }
 
-    public function me()
+    public function own()
     {
         return new UserResource($this->getAuth());
     }
