@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AddressInterface;
 use App\Interfaces\ArticleInterface;
 use App\Interfaces\BaseInterface;
 use App\Interfaces\CategoryInterface;
@@ -9,12 +10,14 @@ use App\Interfaces\OrganizationInterface;
 use App\Interfaces\OtpInterface;
 use App\Interfaces\ProvinceInterface;
 use App\Interfaces\UserInterface;
+use App\Models\Address;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Organization;
 use App\Models\Otp;
 use App\Models\Province;
 use App\Models\User;
+use App\Repositories\AddressRepository;
 use App\Repositories\ArticleRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\CategoryRepository;
@@ -71,6 +74,12 @@ class BackendServiceProvider extends ServiceProvider
             ArticleInterface::class,
             function() {
                 return new ArticleRepository(new Article);
+            }
+        );
+        $this->app->bind(
+            AddressInterface::class,
+            function() {
+                return new AddressRepository(new Address);
             }
         );
     }

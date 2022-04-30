@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\UserController;
@@ -28,6 +29,7 @@ Route::post('/register/verify', [UserController::class, 'verifyRegister'])->name
 
 Route::prefix('/own')->group(function () {
     Route::get('/', [UserController::class, 'own'])->middleware('auth:api')->name('own');
+    Route::get('/addresses', [AddressController::class, 'ownAddresses'])->middleware('auth:api')->name('addresses.ownAddresses');
 });
 
 Route::prefix('/provinces')->group(function () {
@@ -41,3 +43,11 @@ Route::prefix('/articles')->group(function () {
     Route::put('/{id}', [ArticleController::class, 'update'])->middleware('auth:api')->name('articles.update');
     Route::delete('/{id}', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
 });
+
+Route::prefix('/addresses')->group(function () {
+    Route::post('/', [AddressController::class, 'store'])->middleware('auth:api')->name('addresses.store');
+    Route::get('/{id}', [AddressController::class, 'show'])->middleware('auth:api')->name('addresses.show');
+    Route::put('/{id}', [AddressController::class, 'update'])->middleware('auth:api')->name('addresses.update');
+    Route::delete('/{id}', [AddressController::class, 'destroy'])->middleware('auth:api')->name('addresses.destroy');
+});
+

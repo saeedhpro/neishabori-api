@@ -62,7 +62,6 @@ class Controller extends BaseController
     public function getAuth(): User
     {
         /** @var User $auth */
-        $user = auth()->user();
-        return $user;
+        return auth()->user();
     }
 }
