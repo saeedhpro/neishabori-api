@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProvinceController;
@@ -33,6 +34,8 @@ Route::prefix('/own')->group(function () {
     Route::get('/', [UserController::class, 'own'])->middleware('auth:api')->name('own');
     Route::get('/addresses', [AddressController::class, 'ownAddresses'])->middleware('auth:api')->name('addresses.ownAddresses');
     Route::get('/orders', [OrderController::class, 'ownOrders'])->middleware('auth:api')->name('orders.ownOrders');
+    Route::get('/favourites', [ProductController::class, 'ownFavouriteProducts'])->middleware('auth:api')->name('favourites.ownFavouriteProducts');
+    Route::get('/comments', [CommentController::class, 'ownComments'])->middleware('auth:api')->name('comments.ownComments');
 });
 
 Route::prefix('/provinces')->group(function () {
@@ -45,6 +48,7 @@ Route::prefix('/articles')->group(function () {
     Route::get('/{id}', [ArticleController::class, 'show'])->name('articles.show');
     Route::put('/{id}', [ArticleController::class, 'update'])->middleware('auth:api')->name('articles.update');
     Route::delete('/{id}', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
+    Route::get('/{id}/comments', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
 });
 
 Route::prefix('/addresses')->group(function () {
@@ -60,8 +64,8 @@ Route::prefix('/products')->group(function () {
     Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
 });
 
-
 Route::prefix('/orders')->group(function () {
-    Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
+    Route::get('/', [OrderController::class, 'index'])->middleware('auth:api')->name('orders.index');
+    Route::get('/{id}', [OrderController::class, 'show'])->middleware('auth:api')->name('orders.show');
 });
 

@@ -6,6 +6,7 @@ use App\Http\Requests\ProductCreateRequest;
 use App\Http\Resources\ProductCollectionResource;
 use App\Http\Resources\ProductResource;
 use App\Interfaces\ProductInterface;
+use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,6 +17,11 @@ class ProductController extends Controller
 {
 
     protected ProductInterface $productRepository;
+
+    public function __construct(ProductInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     /**
      * Display a listing of the resource.
@@ -92,5 +98,21 @@ class ProductController extends Controller
         $own = $this->getAuth();
         $own->toggleFavorite($product);
         return true;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function ownFavouriteProducts(): ProductCollectionResource
+    {
+        $own = $this->getAuth();
+        if ($this->hasPage()) {
+            $limit = $this->getLimit();
+            $products = $own->getFavoriteItems(Product::class)->paginate($limit);
+        } else {
+            $products = $own->getFavoriteItems(Product::class)->get();
+        }
+        return new ProductCollectionResource($products);
     }
 }
