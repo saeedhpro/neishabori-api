@@ -19,6 +19,8 @@ class Address extends Model
         'recipient_phone_number',
         'user_id',
         'city_id',
+        'lat',
+        'long',
     ];
 
     public function user()

@@ -28,13 +28,21 @@ class Comment extends Model
 
     public function commentable(): BelongsTo
     {
-        if ($this->type == Comment::TYPE_ARTICLE) {
-            return $this->article();
+        switch ($this->type) {
+            case Comment::TYPE_ARTICLE:
+                return $this->article();
+            case Comment::TYPE_PRODUCT:
+                return $this->product();
         }
     }
 
     public function article(): BelongsTo
     {
         return $this->belongsTo(Article::class, 'id', 'commentable_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'id', 'commentable_id');
     }
 }

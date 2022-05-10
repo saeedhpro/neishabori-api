@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -30,6 +32,7 @@ Route::post('/register/verify', [UserController::class, 'verifyRegister'])->name
 Route::prefix('/own')->group(function () {
     Route::get('/', [UserController::class, 'own'])->middleware('auth:api')->name('own');
     Route::get('/addresses', [AddressController::class, 'ownAddresses'])->middleware('auth:api')->name('addresses.ownAddresses');
+    Route::get('/orders', [OrderController::class, 'ownOrders'])->middleware('auth:api')->name('orders.ownOrders');
 });
 
 Route::prefix('/provinces')->group(function () {
@@ -49,5 +52,9 @@ Route::prefix('/addresses')->group(function () {
     Route::get('/{id}', [AddressController::class, 'show'])->middleware('auth:api')->name('addresses.show');
     Route::put('/{id}', [AddressController::class, 'update'])->middleware('auth:api')->name('addresses.update');
     Route::delete('/{id}', [AddressController::class, 'destroy'])->middleware('auth:api')->name('addresses.destroy');
+});
+
+Route::prefix('/products')->group(function () {
+    Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
 });
 

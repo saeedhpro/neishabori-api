@@ -22,6 +22,8 @@ class CreateAddressesTable extends Migration
             $table->string('recipient_first_name');
             $table->string('recipient_last_name');
             $table->string('recipient_phone_number');
+            $table->decimal('lat', 10, 8)->nullable();
+            $table->decimal('long', 11, 8)->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreignId('city_id')->nullable()->references('id')->on('cities')->nullOnDelete();
             $table->timestamps();

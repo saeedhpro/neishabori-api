@@ -22,16 +22,6 @@ class AddressController extends Controller
         $this->addressRepository = $addressRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function ownAddresses(): AddressCollectionResource
     {
         $own = $this->getAuth();
