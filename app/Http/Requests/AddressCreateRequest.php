@@ -31,6 +31,8 @@ class AddressCreateRequest extends FormRequest
             'recipient_first_name' => 'required|string',
             'recipient_last_name' => 'required|string',
             'recipient_phone_number' => 'required|string',
+            'lat' => 'nullable|numeric',
+            'long' => 'nullable|numeric',
             'city_id' => 'required|string',
         ];
     }

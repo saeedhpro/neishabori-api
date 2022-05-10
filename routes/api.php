@@ -55,6 +55,13 @@ Route::prefix('/addresses')->group(function () {
 });
 
 Route::prefix('/products')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->middleware('auth:api')->name('products.index');
+    Route::get('/{id}', [ProductController::class, 'show'])->middleware('auth:api')->name('products.show');
+    Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
+});
+
+
+Route::prefix('/orders')->group(function () {
     Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
 });
 

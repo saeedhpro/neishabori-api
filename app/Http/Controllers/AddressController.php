@@ -52,6 +52,8 @@ class AddressController extends Controller
             'recipient_first_name',
             'recipient_last_name',
             'recipient_phone_number',
+            'lat',
+            'long',
             'user_id',
             'city_id',
         ]));
@@ -62,11 +64,11 @@ class AddressController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return AddressResource
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        return new AddressResource($this->addressRepository->findOneOrFail($id));
     }
 
     /**
@@ -86,6 +88,8 @@ class AddressController extends Controller
             'recipient_first_name',
             'recipient_last_name',
             'recipient_phone_number',
+            'lat',
+            'long',
             'city_id',
         ]), $id);
     }
