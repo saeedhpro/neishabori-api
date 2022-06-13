@@ -2,28 +2,16 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\ServiceRequestController;
+use App\Http\Controllers\SkillController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
@@ -67,5 +55,27 @@ Route::prefix('/products')->group(function () {
 Route::prefix('/orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->middleware('auth:api')->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->middleware('auth:api')->name('orders.show');
+});
+
+Route::prefix('/categories')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/{id}', [CategoryController::class, 'show'])->name('categories.show');
+});
+
+Route::prefix('/skills')->group(function () {
+    Route::get('/', [SkillController::class, 'index'])->name('skills.index');
+    Route::get('/{id}', [SkillController::class, 'show'])->name('skills.show');
+});
+
+Route::prefix('/cooperations')->group(function () {
+    Route::get('/requests', [CooperationRequestController::class, 'index'])->name('cooperations.requests.index');
+    Route::get('/requests/{id}', [CooperationRequestController::class, 'show'])->name('cooperations.requests.show');
+    Route::post('/requests', [CooperationRequestController::class, 'store'])->name('cooperations.requests.store');
+});
+
+Route::prefix('/services')->group(function () {
+    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
+    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
 });
 

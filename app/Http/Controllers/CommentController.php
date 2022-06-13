@@ -31,7 +31,10 @@ class CommentController extends Controller
     public function store(CommentCreateRequest $request)
     {
         $comment = $this->commentRepository->create($request->only([
-
+            'type',
+            'body',
+            'user_id',
+            'commentable_id',
         ]));
         return new CommentResource($comment);
     }
@@ -57,7 +60,7 @@ class CommentController extends Controller
     public function update(CommentUpdateRequest $request, int $id)
     {
         return $this->commentRepository->update($request->only([
-
+            'body',
         ]), $id);
     }
 

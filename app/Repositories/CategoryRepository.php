@@ -23,13 +23,13 @@ class CategoryRepository extends BaseRepository implements CategoryInterface
         ]);
     }
 
-    public function allWithTypeByPagination($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = null, $page = 1, $limit = 10)
+    public function allWithTypeByPagination($columns = array('*') ,$orderBy = 'id', $sortBy = 'asc', $type = null, $page = 1, $limit = 10)
     {
         $query = $this->getQuery($orderBy, $sortBy, $type);
         return $query->paginate($limit);
     }
 
-    public function allWithType($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = null)
+    public function allWithType($columns = array('*') ,$orderBy = 'id', $sortBy = 'asc', $type = null)
     {
         return $this->getQuery($orderBy, $sortBy, $type)->get();
     }
@@ -37,6 +37,7 @@ class CategoryRepository extends BaseRepository implements CategoryInterface
     private function getQuery($orderBy, $sortBy, $type)
     {
         $query = $this->model->orderBy($orderBy, $sortBy);
+        $query = $query->where('parent_id', '=', null);
         return $query->when($type, function ($q) use ($type) {
             $q->where('type', '=', $this);
         });
