@@ -33,9 +33,9 @@ class ServiceController extends Controller
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();
-            return new ServiceCollectionResource($this->serviceRepository->allByPagination('*', 'id', 'desc', $page, $limit));
+            return new ServiceCollectionResource($this->serviceRepository->allByPagination('*', 'id', 'asc', $page, $limit));
         } else {
-            return new ServiceCollectionResource($this->serviceRepository->all());
+            return new ServiceCollectionResource($this->serviceRepository->all('*', 'id', 'asc'));
         }
     }
 

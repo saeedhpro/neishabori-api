@@ -1,0 +1,14 @@
+{
+    "platform": "laravel",
+    "app": "neishbouri",
+    "disks": [
+        {
+            "name": "storage",
+            "mountTo": "storage"
+        },
+        {
+            "name": "public",
+            "mountTo": "public"
+        }
+    ]
+}
