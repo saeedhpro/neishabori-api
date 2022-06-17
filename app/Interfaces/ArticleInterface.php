@@ -18,7 +18,7 @@ interface ArticleInterface extends BaseInterface
      * @param int $limit
      * @return mixed
      */
-    public function searchByPaginate($sortBy = 'id', $orderBy = 'desc', $q = null, $page = 1, $limit = 10);
+    public function searchByPaginate($sortBy = 'id', $orderBy = 'desc', $q = null, $categoryId = null, $page = 1, $limit = 10);
 
     /**
      * Return all model rows
@@ -27,7 +27,7 @@ interface ArticleInterface extends BaseInterface
      * @param null $q
      * @return mixed
      */
-    public function search($sortBy = 'id', $orderBy = 'desc', $q = null);
+    public function search($sortBy = 'id', $orderBy = 'desc', $q = null, $categoryId = null);
 
     /**
      * Return all model rows

@@ -21,23 +21,27 @@ class ArticleRepository extends BaseRepository implements ArticleInterface
         $this->model = $model;
     }
 
-    public function searchByPaginate($sortBy = 'id', $orderBy = 'desc', $q = null, $page = 1, $limit = 10)
+    public function searchByPaginate($sortBy = 'id', $orderBy = 'desc', $q = null, $categoryId = null, $page = 1, $limit = 10)
     {
-        return  $this->getQuery($sortBy, $orderBy, $q)->paginate($limit);
+        return  $this->getQuery($sortBy, $orderBy, $q, $categoryId)->paginate($limit);
     }
 
-    public function search($sortBy = 'id', $orderBy = 'desc', $q = null)
+    public function search($sortBy = 'id', $orderBy = 'desc', $q = null, $categoryId = null)
     {
-        return  $this->getQuery($sortBy, $orderBy, $q)->get();
+        return  $this->getQuery($sortBy, $orderBy, $q, $categoryId)->get();
     }
 
-    private function getQuery($sortBy = 'id', $orderBy = 'desc', $q = null) : Builder
+    private function getQuery($sortBy = 'id', $orderBy = 'desc', $q = null, $categoryId = null) : Builder
     {
         $query = $this->model->orderBy($orderBy, $sortBy);
-        return $query->when($q, function ($query) use ($q) {
+        $query = $query->when($q, function ($query) use ($q) {
             $query->where('title', 'like', "%$q%")
                 ->orWhere('body', 'like', "%$q%");
         });
+        $query = $query->when($categoryId, function ($query) use ($categoryId) {
+            $query->where('category_id', '=', $categoryId);
+        });
+        return $query;
     }
 
     public function findBySlug(string $slug)

@@ -31,12 +31,13 @@ class ArticleController extends Controller
     public function index(): ArticleCollectionResource
     {
         $q = request()->get('q');
+        $categoryId = request()->get('category_id');
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();
-            return new ArticleCollectionResource($this->articleRepository->searchByPaginate('desc', 'id', $q, $page, $limit));
+            return new ArticleCollectionResource($this->articleRepository->searchByPaginate('desc', 'id', $q, $categoryId, $page, $limit));
         } else {
-            return new ArticleCollectionResource($this->articleRepository->search('desc', 'id', $q));
+            return new ArticleCollectionResource($this->articleRepository->search('desc', 'id', $q, $categoryId));
         }
     }
 

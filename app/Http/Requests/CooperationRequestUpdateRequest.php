@@ -13,7 +13,7 @@ class CooperationRequestUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,12 @@ class CooperationRequestUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'full_name' => 'required|string',
+            'phone_number' => 'required|string',
+            'description' => 'required|string',
+            'address' => 'required|string',
+            'skill_id' => 'required|exists:skills,id',
+            'city_id' => 'required|exists:cities,id',
         ];
     }
 }

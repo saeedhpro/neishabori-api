@@ -25,9 +25,9 @@ class CategoryController extends Controller
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();
-            return new CategoryCollectionResource($this->categoryRepository->allWithTypeByPagination('*', 'id', 'DESC', $type, $page, $limit));
+            return new CategoryCollectionResource($this->categoryRepository->allWithTypeByPagination('*', 'id', 'ASC', $type, $page, $limit));
         } else {
-            return new CategoryCollectionResource($this->categoryRepository->allWithType($type));
+            return new CategoryCollectionResource($this->categoryRepository->allWithType('*', 'id', 'ASC', $type));
         }
     }
 

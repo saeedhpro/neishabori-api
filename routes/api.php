@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -80,5 +81,11 @@ Route::prefix('/services')->group(function () {
     Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
     Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
     Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+});
+
+Route::prefix('/consultations')->group(function () {
+    Route::get('/', [ConsultationController::class, 'index'])->name('services.index');
+    Route::post('/', [ConsultationController::class, 'store'])->name('services.store');
+    Route::get('/{id}', [ConsultationController::class, 'show'])->name('services.show');
 });
 

@@ -18,7 +18,7 @@ interface CategoryInterface extends BaseInterface
      * @param int $limit
      * @return mixed
      */
-    public function allWithTypeByPagination($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = null, $page = 1, $limit = 10);
+    public function allWithTypeByPagination($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = 'product', $page = 1, $limit = 10);
     /**
      * Return all model rows by paginate
      * @param string[] $columns
@@ -26,7 +26,7 @@ interface CategoryInterface extends BaseInterface
      * @param string $sortBy
      * @return mixed
      */
-    public function allWithType($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = null);
+    public function allWithType($columns = array('*') ,$orderBy = 'id', $sortBy = 'desc', $type = 'product');
 
     /**
      * @param int $parentID
