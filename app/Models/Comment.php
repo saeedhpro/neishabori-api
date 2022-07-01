@@ -18,6 +18,8 @@ class Comment extends Model
     protected $fillable = [
         'type',
         'body',
+        'likes',
+        'dislikes',
         'user_id',
         'parent_id',
         'commentable_id',

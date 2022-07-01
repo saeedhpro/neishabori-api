@@ -19,6 +19,8 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'body' => $this->body,
+            'likes' => $this->likes,
+            'dislikes' => $this->dislikes,
             'user' => new UserResource($this->user),
             'commentable' => $this->commentable,
             'parent' => $this->parent,
