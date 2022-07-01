@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Jcc\LaravelVote\Traits\Votable;
 
 class Comment extends Model
@@ -18,6 +19,7 @@ class Comment extends Model
         'type',
         'body',
         'user_id',
+        'parent_id',
         'commentable_id',
     ];
 
@@ -38,11 +40,21 @@ class Comment extends Model
 
     public function article(): BelongsTo
     {
-        return $this->belongsTo(Article::class, 'id', 'commentable_id');
+        return $this->belongsTo(Article::class, 'commentable_id', 'id');
     }
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'id', 'commentable_id');
+        return $this->belongsTo(Product::class, 'commentable_id', 'id');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class, 'parent_id', 'id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'parent_id', 'id');
     }
 }

@@ -24,7 +24,7 @@ class ArticleResource extends JsonResource
             'body' => $this->body,
             'category' => $this->category,
             'author' => $this->author,
-            'comments' => $this->comments,
+            'comments' => new CommentCollectionResource($this->comments),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

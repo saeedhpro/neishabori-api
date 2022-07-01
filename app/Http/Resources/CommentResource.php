@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommentResource extends JsonResource
@@ -9,8 +10,8 @@ class CommentResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array
      */
     public function toArray($request)
     {
@@ -20,6 +21,8 @@ class CommentResource extends JsonResource
             'body' => $this->body,
             'user' => new UserResource($this->user),
             'commentable' => $this->commentable,
+            'parent' => $this->parent,
+            'children' => new CommentCollectionResource($this->children),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
