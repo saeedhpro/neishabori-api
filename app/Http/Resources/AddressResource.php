@@ -27,7 +27,7 @@ class AddressResource extends JsonResource
             'lat' => $this->lat,
             'long' => $this->long,
             'user' => $this->user,
-            'city' => $this->city,
+            'city' => new CityResource($this->city),
         ];
     }
 }

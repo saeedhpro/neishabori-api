@@ -78,7 +78,8 @@ class UserController extends Controller
 
     public function own()
     {
-        return new UserResource($this->getAuth());
+        $auth = $this->getAuth();
+        return new UserResource($auth);
     }
 
     /**

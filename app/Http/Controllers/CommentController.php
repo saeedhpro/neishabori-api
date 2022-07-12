@@ -100,4 +100,16 @@ class CommentController extends Controller
             ]));
         }
     }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function children(int $id)
+    {
+        if ($this->hasLimit()) {
+            $limit = $this->getLimit();
+            return new CommentCollectionResource($this->commentRepository->children($id, $limit));
+        }
+    }
 }

@@ -25,7 +25,6 @@ class CategoryRepository extends BaseRepository implements CategoryInterface
 
     public function allWithTypeByPagination($columns = array('*') ,$orderBy = 'id', $sortBy = 'asc', $type = 'product', $page = 1, $limit = 10)
     {
-        dd($type);
         $query = $this->getQuery($orderBy, $sortBy, $type);
         return $query->paginate($limit);
     }

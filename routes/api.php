@@ -41,6 +41,10 @@ Route::prefix('/articles')->group(function () {
     Route::get('/{id}/comments', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
 });
 
+Route::prefix('/comments')->group(function () {
+    Route::get('/{id}/children', [CommentController::class, 'children'])->name('comments.children');
+});
+
 Route::prefix('/addresses')->group(function () {
     Route::post('/', [AddressController::class, 'store'])->middleware('auth:api')->name('addresses.store');
     Route::get('/{id}', [AddressController::class, 'show'])->middleware('auth:api')->name('addresses.show');

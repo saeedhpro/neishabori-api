@@ -40,6 +40,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return bool
+     */
+    public function hasLimit(): bool
+    {
+        return request()->has('limit');
+    }
+
+    /**
      * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
