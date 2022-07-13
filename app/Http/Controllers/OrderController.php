@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderCollectionResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,8 @@ class OrderController extends Controller
     public function ownOrders()
     {
         $own = $this->getAuth();
-
+        $type = \request()->get('type');
+        return new OrderCollectionResource([]);
     }
 
     /**

@@ -22,7 +22,7 @@ class AddressController extends Controller
         $this->addressRepository = $addressRepository;
     }
 
-    public function ownAddresses(): AddressCollectionResource
+    public function ownAddresses()
     {
         $own = $this->getAuth();
         if ($this->hasPage()) {

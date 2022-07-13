@@ -19,8 +19,7 @@ class CreateAddressesTable extends Migration
             $table->string('plate');
             $table->string('uint')->nullable();
             $table->string('postal_code', 10);
-            $table->string('recipient_first_name');
-            $table->string('recipient_last_name');
+            $table->string('recipient_full_name');
             $table->string('recipient_phone_number');
             $table->decimal('lat', 10, 8)->nullable();
             $table->decimal('long', 11, 8)->nullable();

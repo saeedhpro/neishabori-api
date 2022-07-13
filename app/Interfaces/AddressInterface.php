@@ -14,7 +14,6 @@ interface AddressInterface extends BaseInterface
      * @param int $userID
      * @param string $orderBy
      * @param string $sortBy
-     * @param null $q
      * @param int $page
      * @param int $limit
      * @return mixed
@@ -26,7 +25,6 @@ interface AddressInterface extends BaseInterface
      * @param int $userID
      * @param string $orderBy
      * @param string $sortBy
-     * @param null $q
      * @return mixed
      */
     public function search(int $userID, $sortBy = 'id', $orderBy = 'desc');

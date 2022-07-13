@@ -31,9 +31,9 @@ class AddressRepository extends BaseRepository implements AddressInterface
         return $this->getQuery($userID, $sortBy, $orderBy)->get();
     }
 
-    private function getQuery(int $userID, $sortBy = 'id', $orderBy = 'desc'): Builder
+    private function getQuery(int $userID, $sortBy = 'id', $orderBy = 'desc')
     {
-        return $this->model->where('user_id', '=', $userID)
-            ->orderBy($orderBy, $sortBy);
+        return $this->model->orderBy($sortBy, $orderBy)
+            ->where('user_id', '=', $userID);
     }
 }
