@@ -15,8 +15,18 @@ class Order extends Model
     const RETURNED_STATUS = "returned";
     const CANCELED_STATUS = "canceled";
 
+    protected $fillable = [
+        'order_id',
+        'user_id',
+    ];
+
     public function items()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'id', 'order_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -9,6 +9,7 @@ use App\Interfaces\CategoryInterface;
 use App\Interfaces\ConsultationInterface;
 use App\Interfaces\CooperationRequestInterface;
 use App\Interfaces\CustomerInterface;
+use App\Interfaces\OrderInterface;
 use App\Interfaces\OrganizationInterface;
 use App\Interfaces\OtpInterface;
 use App\Interfaces\ProductInterface;
@@ -23,6 +24,7 @@ use App\Models\Category;
 use App\Models\Consultation;
 use App\Models\CooperationRequest;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Otp;
 use App\Models\Product;
@@ -38,6 +40,7 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\ConsultationRepository;
 use App\Repositories\CooperationRequestRepository;
 use App\Repositories\CustomerRepository;
+use App\Repositories\OrderRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\OtpRepository;
 use App\Repositories\ProductRepository;
@@ -149,6 +152,12 @@ class BackendServiceProvider extends ServiceProvider
             ProductInterface::class,
             function() {
                 return new ProductRepository(new Product);
+            }
+        );
+        $this->app->bind(
+            OrderInterface::class,
+            function() {
+                return new OrderRepository(new Order);
             }
         );
     }

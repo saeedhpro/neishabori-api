@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderCollectionResource;
+use App\Interfaces\OrderInterface;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+
+    protected OrderInterface $orderRepository;
+
+    public function __construct(OrderInterface $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +31,11 @@ class OrderController extends Controller
     {
         $own = $this->getAuth();
         $type = \request()->get('type');
-        return new OrderCollectionResource([]);
+        if ($type) {
+            return new OrderCollectionResource($this->orderRepository->userOrderListByType($own->id, $type));
+        } else {
+            return new OrderCollectionResource($this->orderRepository->userOrderList($own->id));
+        }
     }
 
     /**
