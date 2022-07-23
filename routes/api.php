@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductSizeController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestController;
@@ -81,6 +85,38 @@ Route::prefix('/cooperations')->group(function () {
 
 Route::prefix('/services')->group(function () {
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
+    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
+    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+});
+
+Route::prefix('/brands')->group(function () {
+    Route::get('/', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
+    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
+    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+});
+
+Route::prefix('/types')->group(function () {
+    Route::get('/', [ProductTypeController::class, 'index'])->name('products.types.index');
+    Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
+    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
+    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+});
+
+Route::prefix('/sizes')->group(function () {
+    Route::get('/', [ProductSizeController::class, 'index'])->name('products.sizes.index');
+    Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
+    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
+    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+});
+
+Route::prefix('/colors')->group(function () {
+    Route::get('/', [ColorController::class, 'index'])->name('products.colors.index');
     Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
     Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
