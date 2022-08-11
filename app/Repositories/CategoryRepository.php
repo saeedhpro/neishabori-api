@@ -42,4 +42,20 @@ class CategoryRepository extends BaseRepository implements CategoryInterface
             $q->where('type', '=', $type);
         });
     }
+
+    public function allTypeByPagination($columns = array('*'), $orderBy = 'id', $sortBy = 'desc', $type = 'product', $page = 1, $limit = 10)
+    {
+        $query = $this->model->orderBy($orderBy, $sortBy);
+        return $query->when($type, function ($q) use ($type) {
+            $q->where('type', '=', $type);
+        })->paginate($limit);
+    }
+
+    public function allType($columns = array('*'), $orderBy = 'id', $sortBy = 'desc', $type = 'product')
+    {
+        $query = $this->model->orderBy($orderBy, $sortBy);
+        return $query->when($type, function ($q) use ($type) {
+            $q->where('type', '=', $type);
+        })->get();
+    }
 }

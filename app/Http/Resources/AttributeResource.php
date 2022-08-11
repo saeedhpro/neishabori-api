@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductTypeResource extends JsonResource
+class AttributeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +18,10 @@ class ProductTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'value' => $this->id,
+            'type' => $this->type,
+            'category' => $this->category,
+            'product' => $this->product,
+            'items' => $this->items,
         ];
     }
 }

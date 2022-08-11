@@ -56,6 +56,7 @@ class ArticleController extends Controller
             'title',
             'body',
             'thumbnail',
+            'summary',
             'user_id',
             'category_id',
         ]));
@@ -86,6 +87,7 @@ class ArticleController extends Controller
         $this->articleRepository->update($request->only([
             'title',
             'body',
+            'summary',
             'thumbnail',
             'category_id',
         ]), $id);

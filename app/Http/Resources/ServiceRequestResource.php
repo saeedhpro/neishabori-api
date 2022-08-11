@@ -22,7 +22,7 @@ class ServiceRequestResource extends JsonResource
             'time' => $this->time,
             'plate' => $this->plate,
             'address' => $this->address,
-            'city' => $this->city,
+            'city' => new CityResource($this->city),
             'service' => $this->service,
         ];
     }

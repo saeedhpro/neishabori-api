@@ -20,11 +20,17 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return OrderCollectionResource
      */
     public function index()
     {
-        //
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new OrderCollectionResource($this->orderRepository->allByPagination('id', 'created_at', 'DESC', $page, $limit));
+        } else {
+            return new OrderCollectionResource($this->orderRepository->all());
+        }
     }
 
     public function ownOrders()
@@ -35,6 +41,26 @@ class OrderController extends Controller
             return new OrderCollectionResource($this->orderRepository->userOrderListByType($own->id, $type));
         } else {
             return new OrderCollectionResource($this->orderRepository->userOrderList($own->id));
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return OrderCollectionResource
+     */
+    public function userOrders(int $id)
+    {
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new OrderCollectionResource($this->orderRepository->findByPaginate([
+                'user_id' => $id,
+            ], $page, $limit));
+        } else {
+            return new OrderCollectionResource($this->orderRepository->findBy([
+                'user_id' => $id,
+            ]));
         }
     }
 

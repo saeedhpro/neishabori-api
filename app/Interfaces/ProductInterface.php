@@ -10,4 +10,5 @@ namespace App\Interfaces;
 interface ProductInterface extends BaseInterface
 {
 
+    public function findBySlug(string $slug);
 }

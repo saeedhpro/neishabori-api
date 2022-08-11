@@ -3,16 +3,16 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ProductSizeInterface;
+use App\Interfaces\AttributeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ProductSizeRepository
+ * Class AttributeRepository
  *
  * @package \App\Repositories
  */
-class ProductSizeRepository extends BaseRepository implements ProductSizeInterface
+class AttributeRepository extends BaseRepository implements AttributeInterface
 {
     protected $model;
 

@@ -18,7 +18,6 @@ class CreateProductsTable extends Migration
             $table->text('title');
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
-            $table->boolean('is_special')->default(false);
             $table->unsignedBigInteger('quantity')->default(0);
             $table->timestamps();
         });

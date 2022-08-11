@@ -111,5 +111,6 @@ class CommentController extends Controller
             $limit = $this->getLimit();
             return new CommentCollectionResource($this->commentRepository->children($id, $limit));
         }
+        return new CommentCollectionResource($this->commentRepository->children($id));
     }
 }

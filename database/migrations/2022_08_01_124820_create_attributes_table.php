@@ -15,6 +15,11 @@ class CreateAttributesTable extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('type')->default(\App\Models\Attribute::SIMPLE_TYPE);
+            $table->string('category')->default(\App\Models\Attribute::STRING_CATEGORY);
+            $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->unique(['name', 'product_id']);
             $table->timestamps();
         });
     }

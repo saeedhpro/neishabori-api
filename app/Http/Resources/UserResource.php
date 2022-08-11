@@ -27,6 +27,9 @@ class UserResource extends JsonResource
             'is_legal' => $this->is_legal,
             'birth_date' => $this->birth_date,
             'organization' => $this->organization,
+            'role' => $this->role,
+            'is_admin' => $this->isAdmin(),
+            'is_customer' => $this->isCustomer(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

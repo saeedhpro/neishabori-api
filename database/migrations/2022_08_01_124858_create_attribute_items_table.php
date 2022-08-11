@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductSizesTable extends Migration
+class CreateAttributeItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateProductSizesTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_sizes', function (Blueprint $table) {
+        Schema::create('attribute_items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('value');
+            $table->unsignedBigInteger('price')->default(0);
+            $table->foreignId('attribute_id')->references('id')->on('attributes')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateProductSizesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_sizes');
+        Schema::dropIfExists('attribute_items');
     }
 }

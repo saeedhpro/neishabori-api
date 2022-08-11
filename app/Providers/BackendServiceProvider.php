@@ -4,12 +4,15 @@ namespace App\Providers;
 
 use App\Interfaces\AddressInterface;
 use App\Interfaces\ArticleInterface;
+use App\Interfaces\AttributeInterface;
 use App\Interfaces\BaseInterface;
 use App\Interfaces\BrandInterface;
+use App\Interfaces\CartInterface;
 use App\Interfaces\CategoryInterface;
 use App\Interfaces\ColorInterface;
 use App\Interfaces\ConsultationInterface;
 use App\Interfaces\CooperationRequestInterface;
+use App\Interfaces\CouponInterface;
 use App\Interfaces\CustomerInterface;
 use App\Interfaces\OrderInterface;
 use App\Interfaces\OrganizationInterface;
@@ -24,11 +27,14 @@ use App\Interfaces\SkillInterface;
 use App\Interfaces\UserInterface;
 use App\Models\Address;
 use App\Models\Article;
+use App\Models\Attribute;
 use App\Models\Brand;
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Consultation;
 use App\Models\CooperationRequest;
+use App\Models\Coupon;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Organization;
@@ -43,12 +49,15 @@ use App\Models\Skill;
 use App\Models\User;
 use App\Repositories\AddressRepository;
 use App\Repositories\ArticleRepository;
+use App\Repositories\AttributeRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\BrandRepository;
+use App\Repositories\CartRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ColorRepository;
 use App\Repositories\ConsultationRepository;
 use App\Repositories\CooperationRequestRepository;
+use App\Repositories\CouponRepository;
 use App\Repositories\CustomerRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrganizationRepository;
@@ -179,21 +188,15 @@ class BackendServiceProvider extends ServiceProvider
             }
         );
         $this->app->bind(
-            ProductTypeInterface::class,
+            CouponInterface::class,
             function() {
-                return new ProductTypeRepository(new ProductType);
+                return new CouponRepository(new Coupon);
             }
         );
         $this->app->bind(
-            ProductSizeInterface::class,
+            CartInterface::class,
             function() {
-                return new ProductSizeRepository(new ProductSize);
-            }
-        );
-        $this->app->bind(
-            ColorInterface::class,
-            function() {
-                return new ColorRepository(new Color);
+                return new CartRepository(new Cart);
             }
         );
     }

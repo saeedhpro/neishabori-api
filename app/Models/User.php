@@ -29,6 +29,7 @@ class User extends Authenticatable
         'avatar',
         'is_legal',
         'birth_date',
+        'role_id',
         'phone_number_verified_at',
     ];
 
@@ -53,6 +54,11 @@ class User extends Authenticatable
         'is_legal' => 'bool',
     ];
 
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
     public function organization()
     {
         return $this->hasOne(Organization::class);
@@ -66,5 +72,20 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role->id == Role::ADMIN;
+    }
+
+    public function isCustomer()
+    {
+        return $this->role->id == Role::CUSTOMER;
     }
 }

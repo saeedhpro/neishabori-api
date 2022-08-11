@@ -3,16 +3,16 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ColorInterface;
+use App\Interfaces\CouponInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ColorRepository
+ * Class CouponRepository
  *
  * @package \App\Repositories
  */
-class ColorRepository extends BaseRepository implements ColorInterface
+class CouponRepository extends BaseRepository implements CouponInterface
 {
     protected $model;
 

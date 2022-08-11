@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ColorCollectionResource extends ResourceCollection
+class CartItemCollectionResource extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,6 +14,6 @@ class ColorCollectionResource extends ResourceCollection
      */
     public function toArray($request)
     {
-        return ColorResource::collection($this->collection);
+        return parent::toArray($request);
     }
 }

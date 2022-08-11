@@ -17,4 +17,11 @@ class ProductRepository extends BaseRepository implements ProductInterface
     {
         $this->model = $model;
     }
+
+    public function findBySlug(string $slug)
+    {
+        return $this->findOneByOrFail([
+            'slug' => $slug
+        ]);
+    }
 }

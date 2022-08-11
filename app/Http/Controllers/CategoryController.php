@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryCreateRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Http\Resources\CategoryCollectionResource;
+use App\Http\Resources\CategoryResource;
 use App\Interfaces\CategoryInterface;
-use App\Models\Category;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -31,48 +33,72 @@ class CategoryController extends Controller
         }
     }
 
+    public function all()
+    {
+        $type = \request()->get('type');
+        if(!$type) {
+            return $this->createError('type', 'type not found', 422);
+        }
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new CategoryCollectionResource($this->categoryRepository->allTypeByPagination('*', 'id', 'ASC', $type, $page, $limit));
+        } else {
+            return new CategoryCollectionResource($this->categoryRepository->allType('*', 'id', 'ASC', $type));
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param CategoryCreateRequest $request
+     * @return CategoryResource
      */
-    public function store(Request $request)
+    public function store(CategoryCreateRequest $request)
     {
-        //
+        $category = $this->categoryRepository->create($request->only([
+            'name',
+            'type',
+            'parent_id',
+        ]));
+        return new CategoryResource($category);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Category $category
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return CategoryResource
      */
-    public function show(Category $category)
+    public function show(int $id)
     {
-        //
+        return new CategoryResource($this->categoryRepository->findOneOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Category $category
-     * @return \Illuminate\Http\Response
+     * @param CategoryUpdateRequest $request
+     * @param int $id
+     * @return Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, int $id)
     {
-        //
+        return $this->categoryRepository->update($request->only([
+            'name',
+            'type',
+            'parent_id',
+        ]), $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Category $category
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
-    public function destroy(Category $category)
+    public function destroy(int $id)
     {
-        //
+        return $this->categoryRepository->delete($id);
     }
 }

@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Constants;
+use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\VerifyRegisterRequest;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\OrderCollectionResource;
 use App\Http\Resources\UserCollectionResource;
 use App\Http\Resources\UserLoginResource;
 use App\Http\Resources\UserResource;
+use App\Interfaces\CartInterface;
+use App\Interfaces\OrderInterface;
 use App\Interfaces\OrganizationInterface;
 use App\Interfaces\OtpInterface;
 use App\Interfaces\UserInterface;
 use App\Models\Otp;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -24,16 +33,19 @@ class UserController extends Controller
     protected UserInterface $userRepository;
     protected OrganizationInterface $organizationRepository;
     protected OtpInterface $otpRepository;
+    protected CartInterface $cartRepository;
 
     public function __construct(
         UserInterface $userRepository,
         OrganizationInterface $organizationRepository,
-        OtpInterface $otpRepository
+        OtpInterface $otpRepository,
+        CartInterface $cartRepository
     )
     {
         $this->userRepository = $userRepository;
         $this->organizationRepository = $organizationRepository;
         $this->otpRepository = $otpRepository;
+        $this->cartRepository = $cartRepository;
     }
 
     public function login(UserLoginRequest $request)
@@ -82,6 +94,17 @@ class UserController extends Controller
         return new UserResource($auth);
     }
 
+    public function ownCart()
+    {
+        $auth = $this->getAuth();
+        return $this->userCart($auth->id);
+    }
+
+    public function userCart(int $userID)
+    {
+        return new CartResource($this->cartRepository->userCart($userID));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -99,6 +122,28 @@ class UserController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param UserCreateRequest $request
+     * @return UserResource
+     */
+    public function store(UserCreateRequest $request)
+    {
+        $request['password'] = bcrypt($request['password']);
+        return $this->userRepository->create($request->only([
+            'full_name',
+            'phone_number',
+            'password',
+            'email',
+            'sheba',
+            'national_code',
+            'job',
+            'avatar',
+            'birth_date',
+        ]));
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -112,23 +157,50 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserUpdateRequest $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|bool
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, int $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $this->userRepository->update($request->only([
+                'full_name',
+                'phone_number',
+                'email',
+                'sheba',
+                'national_code',
+                'job',
+                'avatar',
+                'birth_date',
+            ]), $id);
+            if ($request['password']) {
+                $request['password'] = bcrypt($request['password']);
+                $this->userRepository->update($request->only([
+                    'password',
+                ]), $id);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->createError('error', $e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        $auth = $this->getAuth();
+        if (!$auth->isAdmin()) {
+            return $this->accessDeniedError();
+        }
+        return $this->userRepository->delete($id);
     }
 }

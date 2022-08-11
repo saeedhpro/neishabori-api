@@ -68,10 +68,32 @@ class Controller extends BaseController
         return request()->has('limit') ? request()->get('limit') : 10;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getParam($key)
+    {
+        return request()->get($key);
+    }
+
     public function getAuth(): User
     {
         /** @var User $auth */
         $auth = Auth::user();
         return $auth;
     }
+
+    function randomCode($length): string
+    {
+        $key = '';
+        $keys = array_merge(range(0, 9), range('a', 'z'), range(0, 9), range('A', 'Z'));
+
+        for ($i = 0; $i < $length; $i++) {
+            $key .= $keys[array_rand($keys)];
+        }
+
+        return $key;
+    }
+
 }

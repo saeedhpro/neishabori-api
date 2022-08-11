@@ -37,6 +37,8 @@ class UserLoginResource extends JsonResource
             'is_legal' => $this->user->is_legal,
             'birth_date' => $this->user->birth_date,
             'organization' => $this->user->organization,
+            'is_admin' => $this->user->isAdmin(),
+            'is_customer' => $this->user->isCustomer(),
             'token' => $this->token,
             'created_at' => $this->user->created_at,
             'updated_at' => $this->user->updated_at,
