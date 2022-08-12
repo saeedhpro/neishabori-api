@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductType extends Model
+class Contact extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'full_name',
+        'phone_number',
+        'body',
     ];
-
-    public function products()
-    {
-        return $this->belongsToMany(Product::class);
-    }
 }

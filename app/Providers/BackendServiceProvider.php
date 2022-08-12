@@ -11,6 +11,7 @@ use App\Interfaces\CartInterface;
 use App\Interfaces\CategoryInterface;
 use App\Interfaces\CommentInterface;
 use App\Interfaces\ConsultationInterface;
+use App\Interfaces\ContactInterface;
 use App\Interfaces\CooperationRequestInterface;
 use App\Interfaces\CouponInterface;
 use App\Interfaces\CustomerInterface;
@@ -32,6 +33,7 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Consultation;
+use App\Models\Contact;
 use App\Models\CooperationRequest;
 use App\Models\Coupon;
 use App\Models\Customer;
@@ -54,6 +56,7 @@ use App\Repositories\CartRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CommentRepository;
 use App\Repositories\ConsultationRepository;
+use App\Repositories\ContactRepository;
 use App\Repositories\CooperationRequestRepository;
 use App\Repositories\CouponRepository;
 use App\Repositories\CustomerRepository;
@@ -212,6 +215,12 @@ class BackendServiceProvider extends ServiceProvider
             AttributeInterface::class,
             function() {
                 return new AttributeRepository(new Attribute);
+            }
+        );
+        $this->app->bind(
+            ContactInterface::class,
+            function() {
+                return new ContactRepository(new Contact);
             }
         );
     }

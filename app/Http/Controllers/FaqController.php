@@ -8,6 +8,7 @@ use App\Http\Resources\FaqCollectionResource;
 use App\Http\Resources\FaqResource;
 use App\Interfaces\FaqInterface;
 use App\Models\Faq;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -34,6 +35,30 @@ class FaqController extends Controller
             return new FaqCollectionResource($this->faqRepository->allByPagination('*', 'created_at', 'desc', $page, $limit));
         } else {
             return new FaqCollectionResource($this->faqRepository->all());
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return FaqCollectionResource|JsonResponse
+     */
+    public function byType()
+    {
+        $category = request()->get('category');
+        if (!$category) {
+            return $this->createError('category', 'دسته بندی الزامی است', 422);
+        }
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new FaqCollectionResource($this->faqRepository->findByPaginate([
+                'category_id' => $category
+            ], $page, $limit));
+        } else {
+            return new FaqCollectionResource($this->faqRepository->findBy([
+                'category_id' => $category
+            ]));
         }
     }
 

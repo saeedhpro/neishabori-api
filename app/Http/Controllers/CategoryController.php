@@ -58,6 +58,7 @@ class CategoryController extends Controller
     {
         $category = $this->categoryRepository->create($request->only([
             'name',
+            'thumbnail',
             'type',
             'parent_id',
         ]));
@@ -86,6 +87,7 @@ class CategoryController extends Controller
     {
         return $this->categoryRepository->update($request->only([
             'name',
+            'thumbnail',
             'type',
             'parent_id',
         ]), $id);

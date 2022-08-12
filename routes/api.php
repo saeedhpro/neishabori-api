@@ -9,6 +9,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\FaqController;
@@ -163,6 +164,7 @@ Route::prefix('/consultations')->group(function () {
 
 Route::prefix('/faqs')->group(function () {
     Route::get('/', [FaqController::class, 'index'])->name('faq.index');
+    Route::get('/type', [FaqController::class, 'byType'])->name('faq.byType');
     Route::post('/', [FaqController::class, 'store'])->middleware('auth:api')->name('faq.store');
     Route::get('/{id}', [FaqController::class, 'show'])->name('faq.show');
     Route::put('/{id}', [FaqController::class, 'update'])->middleware('auth:api')->name('faq.update');
@@ -175,6 +177,14 @@ Route::prefix('/attributes')->group(function () {
     Route::get('/{id}', [AttributeController::class, 'show'])->name('attributes.show');
     Route::put('/{id}', [AttributeController::class, 'update'])->middleware('auth:api')->name('attributes.update');
     Route::delete('/{id}', [AttributeController::class, 'destroy'])->middleware('auth:api')->name('attributes.destroy');
+});
+
+Route::prefix('/contacts')->group(function () {
+    Route::get('/', [ContactController::class, 'index'])->name('contacts.index');
+    Route::post('/', [ContactController::class, 'store'])->middleware('auth:api')->name('contacts.store');
+    Route::get('/{id}', [ContactController::class, 'show'])->name('contacts.show');
+    Route::put('/{id}', [ContactController::class, 'update'])->middleware('auth:api')->name('contacts.update');
+    Route::delete('/{id}', [ContactController::class, 'destroy'])->middleware('auth:api')->name('contacts.destroy');
 });
 
 Route::post('/upload', [UploadController::class, 'upload'])->middleware('auth:api')->name('upload.upload');
