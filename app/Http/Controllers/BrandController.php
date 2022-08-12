@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BrandCreateRequest;
+use App\Http\Requests\BrandUpdateRequest;
 use App\Http\Resources\BrandCollectionResource;
+use App\Http\Resources\BrandResource;
 use App\Interfaces\BrandInterface;
 use App\Models\Brand;
 use Illuminate\Http\Request;
@@ -38,68 +41,54 @@ class BrandController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param BrandCreateRequest $request
+     * @return BrandResource
      */
-    public function store(Request $request)
+    public function store(BrandCreateRequest $request)
     {
-        //
+        $brand = $this->brandRepository->create($request->only([
+            'name',
+            'image',
+        ]));
+        return new BrandResource($brand);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Brand $brand
-     * @return Response
+     * @param int $id
+     * @return BrandResource
      */
-    public function show(Brand $brand)
+    public function show(int $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Brand $brand
-     * @return Response
-     */
-    public function edit(Brand $brand)
-    {
-        //
+        return new BrandResource($this->brandRepository->findOneOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param Brand $brand
+     * @param BrandUpdateRequest $request
+     * @param int $id
      * @return Response
      */
-    public function update(Request $request, Brand $brand)
+    public function update(BrandUpdateRequest $request, int $id)
     {
-        //
+        return $this->brandRepository->update($request->only([
+            'name',
+            'image',
+        ]), $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Brand $brand
+     * @param int $id
      * @return Response
      */
-    public function destroy(Brand $brand)
+    public function destroy(int $id)
     {
-        //
+        return $this->brandRepository->delete($id);
     }
 }

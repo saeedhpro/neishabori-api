@@ -141,10 +141,10 @@ Route::prefix('/services')->group(function () {
 
 Route::prefix('/brands')->group(function () {
     Route::get('/', [BrandController::class, 'index'])->name('brands.index');
-    Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
-    Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
-    Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
-    Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
+    Route::post('/', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('/{id}', [BrandController::class, 'show'])->name('services.show');
+    Route::put('/{id}', [BrandController::class, 'put'])->name('services.put');
+    Route::delete('/{id}', [BrandController::class, 'destroy'])->name('services.destroy');
 });
 
 Route::prefix('/orders')->group(function () {
