@@ -141,10 +141,10 @@ Route::prefix('/services')->group(function () {
 
 Route::prefix('/brands')->group(function () {
     Route::get('/', [BrandController::class, 'index'])->name('brands.index');
-    Route::post('/', [BrandController::class, 'store'])->name('brands.store');
-    Route::get('/{id}', [BrandController::class, 'show'])->name('services.show');
-    Route::put('/{id}', [BrandController::class, 'put'])->name('services.put');
-    Route::delete('/{id}', [BrandController::class, 'destroy'])->name('services.destroy');
+    Route::post('/', [BrandController::class, 'store'])->middleware('auth:api')->name('brands.store');
+    Route::get('/{id}', [BrandController::class, 'show'])->name('brands.show');
+    Route::put('/{id}', [BrandController::class, 'update'])->middleware('auth:api')->name('brands.update');
+    Route::delete('/{id}', [BrandController::class, 'destroy'])->middleware('auth:api')->name('brands.destroy');
 });
 
 Route::prefix('/orders')->group(function () {
