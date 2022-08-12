@@ -2,11 +2,14 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-class AttributeResource extends JsonResource
+class AttributeProductResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -20,6 +23,7 @@ class AttributeResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'category' => $this->category,
+            'items' => $this->item_list,
         ];
     }
 }

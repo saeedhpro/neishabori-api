@@ -32,8 +32,8 @@ class ProductResource extends JsonResource
             'likedByMe' => $this->likedByMe(),
             'images' => $this->getImages(),
             'related_products' => $this->relatedProducts,
-            'attributes' => new AttributeCollectionResource($this->attributes),
-            'colors' => $this->colorAttributes(),
+            'attributes' => new AttributeProductCollectionResource($this->listAttributes($this->id)),
+//            'colors' => $this->colorAttributes(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

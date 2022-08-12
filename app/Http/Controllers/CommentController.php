@@ -6,10 +6,9 @@ use App\Http\Requests\CommentCreateRequest;
 use App\Http\Requests\CommentUpdateRequest;
 use App\Http\Resources\CommentCollectionResource;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\UserResource;
 use App\Interfaces\CommentInterface;
 use App\Models\Comment;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -20,6 +19,25 @@ class CommentController extends Controller
     public function __construct(CommentInterface $commentRepository)
     {
         $this->commentRepository = $commentRepository;
+    }
+
+    public function index()
+    {
+        $type = request()->get('type');
+        if (!$type || ($type != Comment::TYPE_ARTICLE && $type != Comment::TYPE_PRODUCT)) {
+            return $this->createError('type', 'نوع نظر الزامی است', 422);
+        }
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new CommentCollectionResource($this->commentRepository->findByPaginate([
+                'type' => $type,
+            ], $page, $limit));
+        } else {
+            return new CommentCollectionResource($this->commentRepository->findBy([
+                'type' => $type,
+            ]));
+        }
     }
 
     /**
@@ -61,6 +79,7 @@ class CommentController extends Controller
     {
         return $this->commentRepository->update($request->only([
             'body',
+            'accept',
         ]), $id);
     }
 
@@ -82,10 +101,10 @@ class CommentController extends Controller
     public function ownComments()
     {
         $type = request()->get('type');
-        $own = $this->getAuth();
-        if (!$type || ($type != Comment::TYPE_ARTICLE || $type != Comment::TYPE_PRODUCT)) {
-            return $this->createError('type', 'نوع نظر الزامی است', 500);
+        if (!$type || ($type != Comment::TYPE_ARTICLE && $type != Comment::TYPE_PRODUCT)) {
+            return $this->createError('type', 'نوع نظر الزامی است', 422);
         }
+        $own = $this->getAuth();
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();

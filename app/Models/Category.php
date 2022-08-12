@@ -14,6 +14,7 @@ class Category extends Model
 
     const TYPE_ARTICLE = 'article';
     const TYPE_PRODUCT = 'product';
+    const TYPE_FAQ = 'faq';
 
     protected $fillable = [
         'name',

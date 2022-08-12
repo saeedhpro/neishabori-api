@@ -68,11 +68,11 @@ class CooperationRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param CooperationRequest $cooperation
+     * @param int $id
      * @return Response
      */
-    public function destroy(CooperationRequest $cooperation)
+    public function destroy(int $id)
     {
-        //
+        return $this->cooperationRequestRepository->delete($id);
     }
 }

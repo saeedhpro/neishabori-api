@@ -52,7 +52,7 @@ class Product extends Model
     public function likedByMe(): bool
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
         /** @var Product $product */
         $product = Product::find($this->id);
         return $user && $user->hasFavorited($product);
@@ -71,9 +71,19 @@ class Product extends Model
         return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_id', 'id');
     }
 
+    public function listAttributes($id)
+    {
+        $attributes = $this->attributes()->get();
+        /** @var AttributeItem $att */
+        foreach($attributes as $att) {
+            $att['item_list'] = $att->items()->where('product_id', $id)->get();
+        }
+        return $attributes;
+    }
+
     public function attributes()
     {
-        return $this->hasMany(Attribute::class);
+        return $this->belongsToMany(Attribute::class);
     }
 
     public function variableAttributes()

@@ -16,6 +16,7 @@ class Comment extends Model
     const TYPE_PRODUCT = 'product';
 
     protected $fillable = [
+        'accept',
         'type',
         'body',
         'likes',

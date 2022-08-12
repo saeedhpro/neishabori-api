@@ -9,17 +9,16 @@ use App\Interfaces\BaseInterface;
 use App\Interfaces\BrandInterface;
 use App\Interfaces\CartInterface;
 use App\Interfaces\CategoryInterface;
-use App\Interfaces\ColorInterface;
+use App\Interfaces\CommentInterface;
 use App\Interfaces\ConsultationInterface;
 use App\Interfaces\CooperationRequestInterface;
 use App\Interfaces\CouponInterface;
 use App\Interfaces\CustomerInterface;
+use App\Interfaces\FaqInterface;
 use App\Interfaces\OrderInterface;
 use App\Interfaces\OrganizationInterface;
 use App\Interfaces\OtpInterface;
 use App\Interfaces\ProductInterface;
-use App\Interfaces\ProductSizeInterface;
-use App\Interfaces\ProductTypeInterface;
 use App\Interfaces\ProvinceInterface;
 use App\Interfaces\ServiceInterface;
 use App\Interfaces\ServiceRequestInterface;
@@ -31,17 +30,16 @@ use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Cart;
 use App\Models\Category;
-use App\Models\Color;
+use App\Models\Comment;
 use App\Models\Consultation;
 use App\Models\CooperationRequest;
 use App\Models\Coupon;
 use App\Models\Customer;
+use App\Models\Faq;
 use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Otp;
 use App\Models\Product;
-use App\Models\ProductSize;
-use App\Models\ProductType;
 use App\Models\Province;
 use App\Models\Service;
 use App\Models\ServiceRequest;
@@ -54,17 +52,16 @@ use App\Repositories\BaseRepository;
 use App\Repositories\BrandRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\CategoryRepository;
-use App\Repositories\ColorRepository;
+use App\Repositories\CommentRepository;
 use App\Repositories\ConsultationRepository;
 use App\Repositories\CooperationRequestRepository;
 use App\Repositories\CouponRepository;
 use App\Repositories\CustomerRepository;
+use App\Repositories\FaqRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\OtpRepository;
 use App\Repositories\ProductRepository;
-use App\Repositories\ProductSizeRepository;
-use App\Repositories\ProductTypeRepository;
 use App\Repositories\ProvinceRepository;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ServiceRequestRepository;
@@ -197,6 +194,24 @@ class BackendServiceProvider extends ServiceProvider
             CartInterface::class,
             function() {
                 return new CartRepository(new Cart);
+            }
+        );
+        $this->app->bind(
+            FaqInterface::class,
+            function() {
+                return new FaqRepository(new Faq);
+            }
+        );
+        $this->app->bind(
+            CommentInterface::class,
+            function() {
+                return new CommentRepository(new Comment);
+            }
+        );
+        $this->app->bind(
+            AttributeInterface::class,
+            function() {
+                return new AttributeRepository(new Attribute);
             }
         );
     }

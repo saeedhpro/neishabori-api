@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProvinceController;
@@ -48,6 +50,11 @@ Route::prefix('/articles')->group(function () {
 });
 
 Route::prefix('/comments')->group(function () {
+    Route::get('/', [CommentController::class, 'index'])->name('comments.index');
+    Route::post('/', [CommentController::class, 'store'])->middleware('auth:api')->name('comments.store');
+    Route::get('/{id}', [CommentController::class, 'show'])->name('comments.show');
+    Route::put('/{id}', [CommentController::class, 'update'])->middleware('auth:api')->name('comments.update');
+    Route::delete('/{id}', [CommentController::class, 'destroy'])->middleware('auth:api')->name('comments.destroy');
     Route::get('/{id}/children', [CommentController::class, 'children'])->name('comments.children');
 });
 
@@ -115,6 +122,7 @@ Route::prefix('/skills')->group(function () {
 Route::prefix('/cooperations')->group(function () {
     Route::get('/requests', [CooperationRequestController::class, 'index'])->name('cooperations.requests.index');
     Route::get('/requests/{id}', [CooperationRequestController::class, 'show'])->name('cooperations.requests.show');
+    Route::delete('/requests/{id}', [CooperationRequestController::class, 'destroy'])->middleware('auth:api')->name('cooperations.requests.destroy');
     Route::post('/requests', [CooperationRequestController::class, 'store'])->name('cooperations.requests.store');
 });
 
@@ -125,6 +133,7 @@ Route::prefix('/services')->group(function () {
     Route::delete('/{id}', [ServiceController::class, 'destroy'])->middleware('auth:api')->name('services.destroy');
     Route::get('/requests', [ServiceRequestController::class, 'index'])->name('services.requests.index');
     Route::get('/requests/{id}', [ServiceRequestController::class, 'show'])->name('services.requests.show');
+    Route::delete('/requests/{id}', [ServiceRequestController::class, 'destroy'])->middleware('auth:api')->name('services.requests.destroy');
     Route::post('/requests', [ServiceRequestController::class, 'store'])->name('services.requests.store');
     Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
 });
@@ -146,9 +155,26 @@ Route::prefix('/orders')->group(function () {
 });
 
 Route::prefix('/consultations')->group(function () {
-    Route::get('/', [ConsultationController::class, 'index'])->name('services.index');
-    Route::post('/', [ConsultationController::class, 'store'])->name('services.store');
-    Route::get('/{id}', [ConsultationController::class, 'show'])->name('services.show');
+    Route::get('/', [ConsultationController::class, 'index'])->name('consultations.index');
+    Route::post('/', [ConsultationController::class, 'store'])->name('consultations.store');
+    Route::get('/{id}', [ConsultationController::class, 'show'])->name('consultations.show');
+    Route::delete('/{id}', [ConsultationController::class, 'destroy'])->middleware('auth:api')->name('consultations.destroy');
+});
+
+Route::prefix('/faqs')->group(function () {
+    Route::get('/', [FaqController::class, 'index'])->name('faq.index');
+    Route::post('/', [FaqController::class, 'store'])->middleware('auth:api')->name('faq.store');
+    Route::get('/{id}', [FaqController::class, 'show'])->name('faq.show');
+    Route::put('/{id}', [FaqController::class, 'update'])->middleware('auth:api')->name('faq.update');
+    Route::delete('/{id}', [FaqController::class, 'destroy'])->middleware('auth:api')->name('faq.destroy');
+});
+
+Route::prefix('/attributes')->group(function () {
+    Route::get('/', [AttributeController::class, 'index'])->name('attributes.index');
+    Route::post('/', [AttributeController::class, 'store'])->middleware('auth:api')->name('attributes.store');
+    Route::get('/{id}', [AttributeController::class, 'show'])->name('attributes.show');
+    Route::put('/{id}', [AttributeController::class, 'update'])->middleware('auth:api')->name('attributes.update');
+    Route::delete('/{id}', [AttributeController::class, 'destroy'])->middleware('auth:api')->name('attributes.destroy');
 });
 
 Route::post('/upload', [UploadController::class, 'upload'])->middleware('auth:api')->name('upload.upload');

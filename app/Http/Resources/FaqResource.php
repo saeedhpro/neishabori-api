@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AttributeResource extends JsonResource
+class FaqResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +18,9 @@ class AttributeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'type' => $this->type,
-            'category' => $this->category,
+            'question' => $this->question,
+            'answer' => $this->answer,
+            'category' => new CategoryResource($this->category),
         ];
     }
 }
