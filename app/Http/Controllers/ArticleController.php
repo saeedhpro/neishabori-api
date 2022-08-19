@@ -31,7 +31,7 @@ class ArticleController extends Controller
     public function index(): ArticleCollectionResource
     {
         $q = request()->get('q');
-        $categoryId = request()->get('category_id');
+        $categoryId = request()->get('category');
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();

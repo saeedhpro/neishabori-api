@@ -29,6 +29,8 @@ class Product extends Model
         'special_end_date',
         'coupon_id',
         'category_id',
+        'brand_id',
+        'seen',
     ];
 
     protected $casts = [
@@ -49,6 +51,14 @@ class Product extends Model
         ];
     }
 
+    public function getIsSpecial()
+    {
+        return $this->query()->where('is_special', '=', true)
+            ->where('id', '=', $this->id)
+            ->where('special_start_date', '<=', Carbon::now())
+            ->where('special_end_date', '>=', Carbon::now())->first() !== null;
+    }
+
     public function likedByMe(): bool
     {
         /** @var User $user */
@@ -60,10 +70,18 @@ class Product extends Model
 
     public function getImages()
     {
-        if (strlen($this->images)> 0) {
+        if (strlen($this->images) > 0) {
             return explode(',', $this->images);
         }
         return [];
+    }
+
+    public function getThumbnail()
+    {
+        if (strlen($this->images) > 0) {
+            return explode(',', $this->images)[0];
+        }
+        return null;
     }
 
     public function relatedProducts()
@@ -75,7 +93,27 @@ class Product extends Model
     {
         $attributes = $this->attributes()->get();
         /** @var AttributeItem $att */
-        foreach($attributes as $att) {
+        foreach ($attributes as $att) {
+            $att['item_list'] = $att->items()->where('product_id', $id)->get();
+        }
+        return $attributes;
+    }
+
+    public function listSimpleAttributes($id)
+    {
+        $attributes = $this->simpleAttributes()->get();
+        /** @var AttributeItem $att */
+        foreach ($attributes as $att) {
+            $att['item_list'] = $att->items()->where('product_id', $id)->get();
+        }
+        return $attributes;
+    }
+
+    public function listVariableAttributes($id)
+    {
+        $attributes = $this->variableAttributes()->get();
+        /** @var AttributeItem $att */
+        foreach ($attributes as $att) {
             $att['item_list'] = $att->items()->where('product_id', $id)->get();
         }
         return $attributes;
@@ -84,6 +122,11 @@ class Product extends Model
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class);
+    }
+
+    public function attributeItems()
+    {
+        return $this->hasMany(AttributeItem::class);
     }
 
     public function variableAttributes()
@@ -98,12 +141,17 @@ class Product extends Model
 
     public function colorAttributes()
     {
-        return $this->attributes()->where('category', '=', Attribute::COLOR_CATEGORY)->first()->items;
+        return $this->attributes()->where('category', '=', Attribute::COLOR_CATEGORY)->first();
     }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function coupon()

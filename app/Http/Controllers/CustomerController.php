@@ -47,8 +47,7 @@ class CustomerController extends Controller
     {
         $customer = $this->customerRepository->create($request->only([
             'name',
-            'logo',
-            'description',
+            'image',
         ]));
         return new CustomerResource($customer);
     }
@@ -76,8 +75,7 @@ class CustomerController extends Controller
     {
         return $this->customerRepository->update($request->only([
             'name',
-            'logo',
-            'description',
+            'image',
         ]), $id);
     }
 

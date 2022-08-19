@@ -37,13 +37,48 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $sort = \request()->has('sort') ? \request()->get('sort') : 1;
+        $q = \request()->has('q') ? \request()->get('q') : '';
+        $special = \request()->has('special') ? \request()->get('special') : 2;
+        $category = \request()->has('category') ? \request()->get('category') : '';
+        $brands = \request()->has('brands') ? \request()->get('brands') : '';
+        $attributes = \request()->has('attributes') ? \request()->get('attributes') : '';
+        $minPrice = \request()->has('min_price') ? \request()->get('min_price') : $this->productRepository->minPrice();
+        $maxPrice = \request()->has('max_price') ? \request()->get('max_price') : $this->productRepository->maxPrice();
+        $stock = \request()->has('stock') ? \request()->get('stock') : 0;
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();
-            return new ProductCollectionResource($this->productRepository->allByPagination('*', 'id', 'DESC', $page, $limit));
+            return new ProductCollectionResource($this->productRepository->searchByPagination($sort, 'desc', $q, $special, $category, $attributes, $minPrice, $maxPrice, $stock, $brands, $page, $limit));
         } else {
-            return new ProductCollectionResource($this->productRepository->all());
+            return new ProductCollectionResource($this->productRepository->search($sort, 'desc', $q, $special, $category, $attributes, $minPrice, $maxPrice, $stock, $brands));
         }
+    }
+
+    public function newestSpecials()
+    {
+        $sort = 1;
+        $q = '';
+        $special = 1;
+        $category = \request()->has('category') ? \request()->get('category') : '';
+        $brands = '';
+        $attributes = '';
+        $minPrice = $this->productRepository->minPrice();
+        $maxPrice = $this->productRepository->maxPrice();
+        $stock = 1;
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new ProductCollectionResource($this->productRepository->searchByPagination($sort, 'desc', $q, $special, $category, $attributes, $minPrice, $maxPrice, $stock, $brands, $page, $limit));
+        } else {
+            return new ProductCollectionResource($this->productRepository->search($sort, 'desc', $q, $special, $category, $attributes, $minPrice, $maxPrice, $stock, $brands));
+        }
+    }
+
+    public function ownLastProducts()
+    {
+        $ids = \request()->has('ids') ? \request()->get('ids') : '';
+        return new ProductCollectionResource($this->productRepository->whereIn('id', explode(',', $ids))->get());
     }
 
     /**
@@ -95,7 +130,12 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-        return new ProductResource($this->productRepository->findBySlug($slug));
+        /** @var Product $product */
+        $product = $this->productRepository->findBySlug($slug);
+        $product->update([
+            'seen' => $product->seen + 1,
+        ]);
+        return new ProductResource($product);
     }
 
     /**
@@ -103,7 +143,6 @@ class ProductController extends Controller
      *
      * @param ProductUpdateRequest $request
      * @param int $id
-     * @return mixed
      */
     public function update(ProductUpdateRequest $request, int $id)
     {
@@ -131,7 +170,8 @@ class ProductController extends Controller
                 'special_end_date',
             ]), $id);
             $deleted = $request["deleted_attributes"];
-            $delete = $product->attributes()->whereIn('id', $deleted)->delete();
+            $d = $product->attributes()->whereIn('id', $deleted)->detach();
+            $product->attributeItems()->whereIn('attribute_id', $deleted)->delete();
             $attributes = $request["new_attributes"];
             $error = $this->updateAttributes($product, $attributes);
             if ($error != "") {
@@ -169,7 +209,7 @@ class ProductController extends Controller
         $product = $this->productRepository->findOneOrFail($id);
         $own = $this->getAuth();
         $own->toggleFavorite($product);
-        return (bool) $own->hasFavorited($product);
+        return (bool)$own->hasFavorited($product);
     }
 
     /**
@@ -193,18 +233,15 @@ class ProductController extends Controller
         try {
             foreach ($attributes as $attribute) {
                 /** @var Attribute $attr */
-                $attr = $product->attributes()->create([
-                    'name' => $attribute["name"],
-                    'type' => $attribute["type"],
-                    'category' => $attribute["category"],
-                ]);
+                $product->attributes()->attach($attribute['id']);
                 $items = $attribute["items"];
 
                 foreach ($items as $item) {
-                    $attr->items()->create([
+                    $product->attributeItems()->create([
                         'name' => $item["name"],
                         'value' => $item["value"],
                         'price' => $item["price"],
+                        'attribute_id' => $attribute["id"],
                     ]);
                 }
             }

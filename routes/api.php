@@ -12,10 +12,12 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CooperationRequestController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\SkillController;
@@ -35,6 +37,7 @@ Route::prefix('/own')->group(function () {
     Route::get('/orders', [OrderController::class, 'ownOrders'])->middleware('auth:api')->name('orders.ownOrders');
     Route::get('/favourites', [ProductController::class, 'ownFavouriteProducts'])->middleware('auth:api')->name('favourites.ownFavouriteProducts');
     Route::get('/comments', [CommentController::class, 'ownComments'])->middleware('auth:api')->name('comments.ownComments');
+    Route::get('/last/products', [ProductController::class, 'ownLastProducts'])->name('comments.ownLastProducts');
 });
 
 Route::prefix('/provinces')->group(function () {
@@ -47,7 +50,7 @@ Route::prefix('/articles')->group(function () {
     Route::get('/{id}', [ArticleController::class, 'show'])->name('articles.show');
     Route::put('/{id}', [ArticleController::class, 'update'])->middleware('auth:api')->name('articles.update');
     Route::delete('/{id}', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
-    Route::get('/{id}/comments', [ArticleController::class, 'destroy'])->middleware('auth:api')->name('articles.destroy');
+    Route::get('/{id}/comments', [CommentController::class, 'comments'])->middleware('auth:api')->name('articles.comments');
 });
 
 Route::prefix('/comments')->group(function () {
@@ -55,8 +58,19 @@ Route::prefix('/comments')->group(function () {
     Route::post('/', [CommentController::class, 'store'])->middleware('auth:api')->name('comments.store');
     Route::get('/{id}', [CommentController::class, 'show'])->name('comments.show');
     Route::put('/{id}', [CommentController::class, 'update'])->middleware('auth:api')->name('comments.update');
+    Route::post('/{id}/like', [CommentController::class, 'like'])->middleware('auth:api')->name('comments.like');
+    Route::post('/{id}/dislike', [CommentController::class, 'dislike'])->middleware('auth:api')->name('comments.dislike');
     Route::delete('/{id}', [CommentController::class, 'destroy'])->middleware('auth:api')->name('comments.destroy');
     Route::get('/{id}/children', [CommentController::class, 'children'])->name('comments.children');
+});
+
+Route::prefix('/questions')->group(function () {
+    Route::get('/', [QuestionController::class, 'index'])->name('questions.index');
+    Route::post('/', [QuestionController::class, 'store'])->middleware('auth:api')->name('questions.store');
+    Route::get('/{id}', [QuestionController::class, 'show'])->name('questions.show');
+    Route::put('/{id}', [QuestionController::class, 'update'])->middleware('auth:api')->name('questions.update');
+    Route::delete('/{id}', [QuestionController::class, 'destroy'])->middleware('auth:api')->name('questions.destroy');
+    Route::get('/{id}/children', [QuestionController::class, 'children'])->name('questions.children');
 });
 
 Route::prefix('/addresses')->group(function () {
@@ -68,12 +82,15 @@ Route::prefix('/addresses')->group(function () {
 
 Route::prefix('/products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/specials/newest', [ProductController::class, 'newestSpecials'])->name('products.newestSpecials');
     Route::post('/', [ProductController::class, 'store'])->middleware('auth:api')->name('products.store');
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
     Route::put('/{id}', [ProductController::class, 'update'])->middleware('auth:api')->name('products.update');
     Route::delete('/{id}', [ProductController::class, 'destroy'])->middleware('auth:api')->name('products.destroy');
     Route::get('/{id}/related', [ProductController::class, 'relatedProducts'])->middleware('auth:api')->name('products.related');
     Route::post('/{id}/favourite', [ProductController::class, 'toggleFavourite'])->middleware('auth:api')->name('products.toggleFavourite');
+    Route::get('/{id}/comments', [CommentController::class, 'comments'])->middleware('auth:api')->name('products.comments');
+    Route::get('/{id}/questions', [QuestionController::class, 'questions'])->middleware('auth:api')->name('products.questions');
 });
 
 Route::prefix('/users')->middleware('auth:api')->group(function () {
@@ -147,6 +164,14 @@ Route::prefix('/brands')->group(function () {
     Route::delete('/{id}', [BrandController::class, 'destroy'])->middleware('auth:api')->name('brands.destroy');
 });
 
+Route::prefix('/customers')->group(function () {
+    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+    Route::post('/', [CustomerController::class, 'store'])->middleware('auth:api')->name('customers.store');
+    Route::get('/{id}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::put('/{id}', [CustomerController::class, 'update'])->middleware('auth:api')->name('customers.update');
+    Route::delete('/{id}', [CustomerController::class, 'destroy'])->middleware('auth:api')->name('customers.destroy');
+});
+
 Route::prefix('/orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/', [OrderController::class, 'store'])->name('orders.store');
@@ -180,11 +205,12 @@ Route::prefix('/attributes')->group(function () {
 });
 
 Route::prefix('/contacts')->group(function () {
-    Route::get('/', [ContactController::class, 'index'])->name('contacts.index');
-    Route::post('/', [ContactController::class, 'store'])->middleware('auth:api')->name('contacts.store');
+    Route::get('/', [ContactController::class, 'index'])->middleware('auth:api')->name('contacts.index');
+    Route::post('/', [ContactController::class, 'store'])->name('contacts.store');
     Route::get('/{id}', [ContactController::class, 'show'])->name('contacts.show');
     Route::put('/{id}', [ContactController::class, 'update'])->middleware('auth:api')->name('contacts.update');
     Route::delete('/{id}', [ContactController::class, 'destroy'])->middleware('auth:api')->name('contacts.destroy');
 });
 
 Route::post('/upload', [UploadController::class, 'upload'])->middleware('auth:api')->name('upload.upload');
+Route::get('/search/values', [AdminController::class, 'searchValues'])->name('search.searchValues');

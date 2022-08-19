@@ -21,6 +21,7 @@ use App\Interfaces\OrganizationInterface;
 use App\Interfaces\OtpInterface;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\ProvinceInterface;
+use App\Interfaces\QuestionInterface;
 use App\Interfaces\ServiceInterface;
 use App\Interfaces\ServiceRequestInterface;
 use App\Interfaces\SkillInterface;
@@ -43,6 +44,7 @@ use App\Models\Organization;
 use App\Models\Otp;
 use App\Models\Product;
 use App\Models\Province;
+use App\Models\Question;
 use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Skill;
@@ -66,6 +68,7 @@ use App\Repositories\OrganizationRepository;
 use App\Repositories\OtpRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProvinceRepository;
+use App\Repositories\QuestionRepository;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ServiceRequestRepository;
 use App\Repositories\SkillRepository;
@@ -221,6 +224,12 @@ class BackendServiceProvider extends ServiceProvider
             ContactInterface::class,
             function() {
                 return new ContactRepository(new Contact);
+            }
+        );
+        $this->app->bind(
+            QuestionInterface::class,
+            function() {
+                return new QuestionRepository(new Question);
             }
         );
     }

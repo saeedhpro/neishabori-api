@@ -26,6 +26,10 @@ class Comment extends Model
         'commentable_id',
     ];
 
+    protected $casts = [
+        'accept' => 'bool',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

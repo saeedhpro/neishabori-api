@@ -40,6 +40,31 @@ class CommentController extends Controller
         }
     }
 
+    public function comments(int $id)
+    {
+        $type = request()->get('type');
+        if (!$type || ($type != Comment::TYPE_ARTICLE && $type != Comment::TYPE_PRODUCT)) {
+            return $this->createError('type', 'نوع نظر الزامی است', 422);
+        }
+        if ($this->hasPage()) {
+            $page = $this->getPage();
+            $limit = $this->getLimit();
+            return new CommentCollectionResource($this->commentRepository->findByPaginate([
+                'type' => $type,
+                'commentable_id' => $id,
+                'accept' => true,
+                'parent_id' => null,
+            ], $page, $limit));
+        } else {
+            return new CommentCollectionResource($this->commentRepository->findBy([
+                'type' => $type,
+                'commentable_id' => $id,
+                'accept' => true,
+                'parent_id' => null,
+            ]));
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -53,6 +78,7 @@ class CommentController extends Controller
             'body',
             'user_id',
             'commentable_id',
+            'parent_id',
         ]));
         return new CommentResource($comment);
     }
@@ -80,7 +106,36 @@ class CommentController extends Controller
         return $this->commentRepository->update($request->only([
             'body',
             'accept',
+            'parent_id',
         ]), $id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function like(int $id)
+    {
+        $comment = $this->commentRepository->findOneOrFail($id);
+        return $this->commentRepository->update([
+            'likes' => $comment->likes + 1,
+        ], $id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function dislike(int $id)
+    {
+        $comment = $this->commentRepository->findOneOrFail($id);
+        return $this->commentRepository->update([
+            'likes' => $comment->likes + 1,
+        ], $id);
     }
 
     /**

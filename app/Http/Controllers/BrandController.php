@@ -34,9 +34,9 @@ class BrandController extends Controller
         if ($this->hasPage()) {
             $page = $this->getPage();
             $limit = $this->getLimit();
-            return new BrandCollectionResource($this->brandRepository->allByPagination('*', 'id', 'asc', $page, $limit));
+            return new BrandCollectionResource($this->brandRepository->allByPagination('*', 'id', 'desc', $page, $limit));
         } else {
-            return new BrandCollectionResource($this->brandRepository->all('*', 'id', 'asc'));
+            return new BrandCollectionResource($this->brandRepository->all('*', 'id', 'desc'));
         }
     }
 
